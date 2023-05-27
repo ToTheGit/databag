@@ -172,7 +172,7 @@ while True:
       if z == 1:
         start = datetime.now()
         save, update = city_pop(update)
-        save.to_csv("seoul_citydata_2 (15).csv", mode='a', header=False, index=False) # csv파일에 튜플들 누적 저장
+        save.to_csv("seoul_citydata_2 (17).csv", mode='a', header=False, index=False) # csv파일에 튜플들 누적 저장
         end = datetime.now()
         runtime_taken(start, end) # 소요시간 함수
         z += 1
@@ -190,7 +190,7 @@ while True:
             start = datetime.now()
             print("서버갱신: " , update[-1], "| 현재 시각: ",start) #서버갱신 알림출력
             save, update = city_pop(update) #population 데이터프레임 추출 함수 -> population
-            save.to_csv("seoul_citydata_2 (15).csv", mode='a', header=False, index=False) # csv파일에 튜플들 누적 저장
+            save.to_csv("seoul_citydata_2 (17).csv", mode='a', header=False, index=False) # csv파일에 튜플들 누적 저장
             end = datetime.now()
             runtime_taken(start, end) # 소요시간 함수
             update = [update[-1]]
