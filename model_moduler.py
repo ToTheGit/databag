@@ -94,7 +94,8 @@ class Preprocessing:
 
 
 class Modeling:
-    def __init__(self, data, delay=2304, sequence_length=2016, sampling_rate=1, batch_size=64):
+    def __init__(self, preprocessor, data, delay=2304, sequence_length=2016, sampling_rate=1, batch_size=64):
+        self.preprocessor = preprocessor
         self.data = data
         self.delay = delay
         self.sequence_length = sequence_length
@@ -144,7 +145,7 @@ class Modeling:
                 
         # Convert list to numpy array for easier manipulation
         predictions = np.array(predictions)
-        predicted_values = predictions * preprocessor.std[target] + preprocessor.mean[target]
+        predicted_values = predictions * self.preprocessor.std[target] + self.preprocessor.mean[target]
         return predicted_values
     
     def get_ready(predicted_values, min_max):

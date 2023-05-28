@@ -63,7 +63,7 @@ predicted_values = {}
 # In[ ]:
 
 start_time = time.time()
-modeling_mean = Modeling(mean_dev)
+modeling_mean = Modeling(preprocessor, mean_dev)
 dataset_mean = modeling_mean.create_dataset('MEAN')
 model_mean = modeling_mean.modeling(dataset_mean, 'MEAN')
 sequence_length_ppltn = 2016  # one week's data
@@ -77,11 +77,11 @@ print("소요 시간: {:.2f} seconds".format(elapsed_time))
 # In[ ]:
 
 start_time = time.time()
-modeling_dev = Modeling(mean_dev)
+modeling_dev = Modeling(preprocessor, mean_dev)
 dataset_dev = modeling_dev.create_dataset('DEV')
 model_dev = modeling_dev.modeling(dataset_dev, 'DEV')
 sequence_length_ppltn = 2016  # one week's data
-predicted_values['DEV'] = modeling_mean.prediction(model_dev, sequence_length_ppltn, 'DEV')
+predicted_values['DEV'] = modeling_dev.prediction(model_dev, sequence_length_ppltn, 'DEV')
 print("AREA_PPLTN_MIN 예측완료")
 elapsed_time = end_time - start_time
 print("DEV 예측완료 \n")
