@@ -74,7 +74,7 @@ class Preprocessing:
         data['is_holiday'] = data['PPLTN_TIME'].dt.date.isin(holidays).astype(int)
         data.set_index('PPLTN_TIME', inplace=True)
         
-        data = pd.get_dummies(data, columns=['PRECPT_TYPE', 'day_of_week', 'is_holiday'])
+        data = pd.get_dummies(data, columns=['PRECPT_TYPE', 'day_of_week', 'is_holiday']).astype('int32')
         
         # Calculate mean and deviation of each row
         data['MEAN'] = data[['AREA_PPLTN_MIN', 'AREA_PPLTN_MAX']].mean(axis=1)
