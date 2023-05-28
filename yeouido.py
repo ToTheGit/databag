@@ -67,11 +67,16 @@ modeling_mean = Modeling(preprocessor, mean_dev)
 dataset_mean = modeling_mean.create_dataset('MEAN')
 model_mean = modeling_mean.modeling(dataset_mean, 'MEAN')
 sequence_length_ppltn = 2016  # one week's data
+elapsed_time = end_time - start_time
+print("MEAN 훈련 완료 \n")
+print("MEAN 훈련 시간: {:.2f} seconds".format(elapsed_time))
+
+start_time = time.time()
 predicted_values['MEAN'] = modeling_mean.prediction(model_mean, sequence_length_ppltn, 'MEAN')
 end_time = time.time()
 elapsed_time = end_time - start_time
-print("MEAN 예측완료 \n")
-print("소요 시간: {:.2f} seconds".format(elapsed_time))
+print("MEAN 예측 완료 \n")
+print("MEAN 예측 시간: {:.2f} seconds".format(elapsed_time))
 
 
 # In[ ]:
@@ -81,25 +86,27 @@ modeling_dev = Modeling(preprocessor, mean_dev)
 dataset_dev = modeling_dev.create_dataset('DEV')
 model_dev = modeling_dev.modeling(dataset_dev, 'DEV')
 sequence_length_ppltn = 2016  # one week's data
-predicted_values['DEV'] = modeling_dev.prediction(model_dev, sequence_length_ppltn, 'DEV')
-print("AREA_PPLTN_MIN 예측완료")
 elapsed_time = end_time - start_time
-print("DEV 예측완료 \n")
-print("df load 소요 시간: {:.2f} seconds".format(elapsed_time))
+print("DEV 훈련 완료 \n")
+print("DEV 훈련 시간: {:.2f} seconds".format(elapsed_time))
+
+start_time = time.time()
+predicted_values['DEV'] = modeling_dev.prediction(model_dev, sequence_length_ppltn, 'DEV')
+elapsed_time = end_time - start_time
+print("DEV 예측 완료 \n")
+print("DEV 예측 시간: {:.2f} seconds".format(elapsed_time))
 
 
 # In[ ]:
 
-
-df_predictions = get_ready(df_predictions, min_max)
+ready = Modeling(df_predictions)
+df_predictions = ready.get_ready(df_predictions, min_max)
 print("get_ready 완료")
 
 
 # In[ ]:
 
-
-extract = Modeling(df_predictions)
-df_predictions = extract.extract_representative_values()
+df_predictions = ready.extract_representative_values()
 print("extract_representative_values 완료")
 
 

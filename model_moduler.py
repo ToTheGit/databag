@@ -148,7 +148,7 @@ class Modeling:
         predicted_values = predictions * self.preprocessor.std[target] + self.preprocessor.mean[target]
         return predicted_values
     
-    def get_ready(predicted_values, min_max):
+    def get_ready(df_predictions, min_max):
         df_predictions = pd.DataFrame(predicted_values)
         df_predictions['AREA_PPLTN_MAX'] = df_predictions['MEAN'] + df_predictions['DEV']
         df_predictions['AREA_PPLTN_MIN'] = df_predictions['MEAN'] - df_predictions['DEV']
