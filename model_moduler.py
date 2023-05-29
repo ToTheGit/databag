@@ -149,7 +149,7 @@ class Modeling:
         return predicted_values
     
     def get_ready(self, df_predictions, min_max):
-        df_predictions = pd.DataFrame(predicted_values)
+        df_predictions = pd.DataFrame(df_predictions)
         df_predictions['AREA_PPLTN_MAX'] = df_predictions['MEAN'] + df_predictions['DEV']
         df_predictions['AREA_PPLTN_MIN'] = df_predictions['MEAN'] - df_predictions['DEV']
         df_predictions = df_predictions.drop(['MEAN', 'DEV'], axis=1)

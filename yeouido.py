@@ -106,7 +106,7 @@ print("get_ready 완료")
 
 # In[ ]:
 
-df_predictions = ready.extract_representative_values()
+df_predictions = ready.extract_representative_values(df_predictions)
 print("extract_representative_values 완료")
 
 
