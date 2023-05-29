@@ -148,7 +148,7 @@ class Modeling:
         predicted_values = predictions * self.preprocessor.std[target] + self.preprocessor.mean[target]
         return predicted_values
     
-    def get_ready(df_predictions, min_max):
+    def get_ready(self, df_predictions, min_max):
         df_predictions = pd.DataFrame(predicted_values)
         df_predictions['AREA_PPLTN_MAX'] = df_predictions['MEAN'] + df_predictions['DEV']
         df_predictions['AREA_PPLTN_MIN'] = df_predictions['MEAN'] - df_predictions['DEV']
@@ -175,7 +175,7 @@ class Modeling:
     'AREA_PPLTN_MIN', 'AREA_PPLTN_MAX', 'AREA_CONGEST_PER']].astype('int64')
         return df_predictions
     
-    def extract_representative_values(data):
+    def extract_representative_values(self, data):
         functions = {
             'AREA_CONGEST_PER': max,
             'AREA_PPLTN_MIN': min,
@@ -195,7 +195,7 @@ class DatabaseUpdater:
         self.cnx = mysql.connector.connect(user=user, password=password, host=host, database=database)
         self.cursor = self.cnx.cursor()
 
-    def to_sql(df_predictions, place):
+    def to_sql(self, df_predictions, place):
         df_predictions = df_predictions.reset_index(drop=True)
         df_predictions['id'] = df_predictions.index
         df_predictions['AREA_NM'] = place
