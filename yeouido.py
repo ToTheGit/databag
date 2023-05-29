@@ -99,7 +99,7 @@ print("DEV 예측 시간: {:.2f} seconds".format(elapsed_time))
 
 # In[ ]:
 
-ready = Modeling(predicted_values)
+ready = Modeling(preprocessor, predicted_values)
 df_predictions = ready.get_ready(predicted_values, min_max)
 print("get_ready 완료")
 
