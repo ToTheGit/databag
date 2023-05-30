@@ -152,13 +152,20 @@ class Modeling:
         # Convert lists to numpy arrays for easier manipulation
         predictions1 = np.array(predictions1)
         predictions2 = np.array(predictions2)
-        predicted_values = {}
-        predicted_values['AREA_PPLTN_MIN'] = predictions1 * self.preprocessor.std['AREA_PPLTN_MIN'] + self.preprocessor.mean['AREA_PPLTN_MIN']
-        predicted_values['AREA_PPLTN_MAX'] = predictions2 * self.preprocessor.std['AREA_PPLTN_MAX'] + self.preprocessor.mean['AREA_PPLTN_MAX']
-        return predicted_values
+        
+        predictions1 = predictions1 * self.preprocessor.std['AREA_PPLTN_MIN'] + self.preprocessor.mean['AREA_PPLTN_MIN']
+        predictions2 = predictions2 * self.preprocessor.std['AREA_PPLTN_MAX'] + self.preprocessor.mean['AREA_PPLTN_MAX'] 
+                # Reshape the arrays
+        predictions1 = predictions1.reshape(-1)
+        predictions2 = predictions2.reshape(-1)
+        # Create dataframes
+        df_predictions1 = pd.DataFrame(predictions1, columns=['AREA_PPLTN_MIN'])
+        df_predictions2 = pd.DataFrame(predictions2, columns=['AREA_PPLTN_MAX'])
+        # If you want to combine these two dataframes into one, you can do:
+        df_predictions = pd.concat([df_predictions1, df_predictions2], axis=1)
+        return df_predictions
     
     def get_ready(self, df_predictions):
-        df_predictions = pd.DataFrame(df_predictions)
         def swap_min_max(row):
             if row['AREA_PPLTN_MIN'] > row['AREA_PPLTN_MAX']:
                 row['AREA_PPLTN_MIN'], row['AREA_PPLTN_MAX'] = row['AREA_PPLTN_MAX'], row['AREA_PPLTN_MIN']
