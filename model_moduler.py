@@ -176,15 +176,19 @@ class Modeling:
         return df_predictions
     
     def extract_representative_values(self, data):
-        functions = {
-            'AREA_CONGEST_PER': max,
-            'AREA_PPLTN_MIN': min,
-            'AREA_PPLTN_MAX': max
-        }
+        data['group'] = np.arange(len(data)) // 12
 
-        for col, func in functions.items():
-            data[col] = [func(data[col].values[i:i+12]) for i in range(0, len(data), 12)]
-        return data
+        def custom_operations(group):
+            return pd.Series({
+                'AREA_CONGEST_PER': group['AREA_CONGEST_PER'].max(),
+                'AREA_PPLTN_MIN': group['AREA_PPLTN_MIN'].min(),
+                'AREA_PPLTN_MAX': group['AREA_PPLTN_MAX'].max()
+            })
+        # Group by the 'group' column and apply your custom operations
+        df_grouped = data.groupby('group').apply(custom_operations)
+        # Reset the index if you want
+        df_grouped.reset_index(drop=True, inplace=True)
+        return df_grouped
 
 
 # In[ ]:
