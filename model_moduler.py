@@ -154,25 +154,8 @@ class Modeling:
         df_predictions['AREA_PPLTN_MIN'] = df_predictions['MEAN'] - df_predictions['DEV']
         df_predictions = df_predictions.drop(['MEAN', 'DEV'], axis=1)
         
-        min_max['weekday'] = min_max.index.weekday
-        min_max['time'] = min_max.index.time
-        min_max_grouped = min_max.groupby(['weekday', 'time']).agg(
-            {'AREA_PPLTN_MIN': 'min', 'AREA_PPLTN_MAX': 'max'}
-        )
-        min_max_grouped.reset_index(inplace=True)
-        min_max_grouped = min_max_grouped.drop(['weekday', 'time'], axis=1)
-        
-        # First, compute the averages for each DataFrame
-        df_predictions['AVG'] = df_predictions[['AREA_PPLTN_MIN', 'AREA_PPLTN_MAX']].mean(axis=1)
-        min_max_grouped['AVG'] = min_max_grouped[['AREA_PPLTN_MIN', 'AREA_PPLTN_MAX']].mean(axis=1)
-        # Make sure that the indexes align before computing the percentages
-        df_predictions = df_predictions.sort_index()
-        min_max_grouped = min_max_grouped.sort_index()
-        # Compute the percentages and store them in a new column in df_predictions
-        df_predictions['AREA_CONGEST_PER'] = (df_predictions['AVG'] / min_max_grouped['AVG']) * 100
-        
-        df_predictions[['AREA_PPLTN_MIN', 'AREA_PPLTN_MAX', 'AREA_CONGEST_PER']] = df_predictions[[
-    'AREA_PPLTN_MIN', 'AREA_PPLTN_MAX', 'AREA_CONGEST_PER']].astype('int64')
+        df_predictions[['AREA_PPLTN_MIN', 'AREA_PPLTN_MAX']] = df_predictions[[
+    'AREA_PPLTN_MIN', 'AREA_PPLTN_MAX']].astype('int64')
         return df_predictions
     
     def extract_representative_values(self, data):
@@ -180,13 +163,26 @@ class Modeling:
 
         def custom_operations(group):
             return pd.Series({
-                'AREA_CONGEST_PER': group['AREA_CONGEST_PER'].max(),
                 'AREA_PPLTN_MIN': group['AREA_PPLTN_MIN'].min(),
                 'AREA_PPLTN_MAX': group['AREA_PPLTN_MAX'].max()
             })
         # Group by the 'group' column and apply your custom operations
         df_grouped = data.groupby('group').apply(custom_operations)
         # Reset the index if you want
+        # Step 1: Calculate the global minimum and maximum values
+        global_min = df_grouped['AREA_PPLTN_MIN'].min()
+        global_max = df_grouped['AREA_PPLTN_MAX'].max()
+
+        # Step 2: Calculate the percentage of `AREA_PPLTN_MAX` relative to the range of the global maximum and minimum values
+        df_grouped['AREA_CONGEST_LVL'] = ((df_grouped['AREA_PPLTN_MAX'] - global_min) / (global_max - global_min)) * 100
+        
+        # Define the bins
+        bins = [-np.inf, 33, 50, 75, np.inf]
+        # Define the labels for the bins
+        labels = ['여유', '보통', '약간 붐빔', '붐빔']
+        # Create a new column with the category data
+        df_grouped['AREA_CONGEST_LVL'] = pd.cut(df_grouped['AREA_CONGEST_LVL'], bins=bins, labels=labels)
+        
         df_grouped.reset_index(drop=True, inplace=True)
         return df_grouped
 
@@ -212,11 +208,11 @@ class DatabaseUpdater:
         for i, row in df_predictions.iterrows():
             # Create the SQL INSERT command with ON DUPLICATE KEY UPDATE
             insert_query = f"""
-            INSERT INTO predict_congestions_tb
-            (id, AREA_NM, AREA_CONGEST_PER, AREA_PPLTN_MIN, AREA_PPLTN_MAX) 
-            VALUES ({i}, '{place}', {row['AREA_CONGEST_PER']}, {row['AREA_PPLTN_MIN']}, {row['AREA_PPLTN_MAX']})
+            INSERT INTO congestions_tb
+            (id, AREA_NM, AREA_CONGEST_LVL, AREA_PPLTN_MIN, AREA_PPLTN_MAX) 
+            VALUES ({i}, '{place}', {row['AREA_CONGEST_LVL']}, {row['AREA_PPLTN_MIN']}, {row['AREA_PPLTN_MAX']})
             ON DUPLICATE KEY UPDATE
-            AREA_CONGEST_PER = VALUES(AREA_CONGEST_PER),
+            AREA_CONGEST_LVL = VALUES(AREA_CONGEST_LVL),
             AREA_PPLTN_MIN = VALUES(AREA_PPLTN_MIN),
             AREA_PPLTN_MAX = VALUES(AREA_PPLTN_MAX)
             """
