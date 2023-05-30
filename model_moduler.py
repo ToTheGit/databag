@@ -112,7 +112,7 @@ class Modeling:
         return dataset
 
     def modeling(self, dataset):
-        inputs = keras.Input(shape=(sequence_length, data.shape[-1]))
+        inputs = keras.Input(shape=(self.sequence_length, self.data.shape[-1]))
         # Shared layers
         x = layers.GRU(32, return_sequences=True)(inputs)
         x = layers.GRU(32)(x)
