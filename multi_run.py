@@ -5,16 +5,14 @@
 
 
 import multiprocessing
-
+from functools import partial
 
 # In[ ]:
 
 
-def run_script_with_places(places):
-    def run_script(place):
-        import yeouido
-        yeouido.main(place, places)
-    return run_script
+def run_script(place, places):
+    import yeouido
+    yeouido.main(place, places)
 
 if __name__ == "__main__":
     places = ['여의도',
@@ -70,5 +68,5 @@ if __name__ == "__main__":
 
     # Create a process pool and start all processes
     with multiprocessing.Pool(processes=5) as pool:
-        pool.map(run_script_with_places(places), places)
+        pool.map(partial(run_script, places=places), places)
 
