@@ -90,7 +90,7 @@ def city_to_db(update): # 인구 혼잡도 dataframe of places
         listOf.append(tree[2][1][0][0].text)
         listOf.append(tree[2][2][0][3].text)
         listOf.append(tree[2][8][0][19].text)
-        listOf.append(tree[2][8][0][24][-1][5].text)
+        listOf.append(tree[2][8][0][24][0][5].text)
 
         columns = []
         columns.append('hotspot_name')
@@ -107,7 +107,7 @@ def city_to_db(update): # 인구 혼잡도 dataframe of places
       else:
         return city_to_db(update)
   city.loc[:, 'congestion_level'] = city['congestion_level'].replace({'여유': 1, '보통': 2, '약간 붐빔': 3, '붐빔': 4})
-  city.loc[:, 'sky_status_level'] = city['sky_status_level'].replace({'맑음': 1, '구름많음': 2, '흐림': 3})
+  city.loc[:, 'sky_status_level'] = city['sky_status_level'].replace({'맑음': 3, '구름많음': 2, '흐림': 1})
   city['pm_10'] = city['pm_10'].fillna('NULL')
   return city, update
 
