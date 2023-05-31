@@ -122,7 +122,7 @@ class Modeling:
         model = keras.Model(inputs, [output1, output2])
         model.compile(optimizer="Adam", loss={"output1": "mse", "output2": "mse"}, 
                       metrics={"output1": ["mae"], "output2": ["mae"]}, )
-        history = model.fit(dataset, epochs=10)
+        history = model.fit(dataset, epochs=15)
         return model
             
     def prediction(self, model, sequence_length):
