@@ -16,7 +16,7 @@ import time
 from model_moduler import Preprocessing, Modeling, DatabaseUpdater
 import multiprocessing
 
-def main(place)
+def main(place, places)
     # print(place, "예측")
     start_time = time.time()
     df = pd.read_csv("seoul_citydata_2 (16).csv")
@@ -66,6 +66,6 @@ def main(place)
     # In[ ]:
 
     print("DB저장 시작", datetime.now())
-    updater.to_sql(df_predictions, place)
+    updater.to_sql(df_predictions, place, places)
     elapsed_time = end_time - start_time
     print("DB저장 완료", datetime.now())

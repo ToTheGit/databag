@@ -213,10 +213,11 @@ class DatabaseUpdater:
         self.cnx = mysql.connector.connect(user=user, password=password, host=host, database=database)
         self.cursor = self.cnx.cursor()
 
-    def to_sql(self, df_predictions, place):
+    def to_sql(self, df_predictions, place, places):
         df_predictions = df_predictions.reset_index(drop=True)
         df_predictions['id'] = df_predictions.index
-        df_predictions['AREA_NM'] = place
+        place_index = places.index(place)
+        df_predictions['AREA_NM'] = place_index
         # Connect to the database
         cnx = mysql.connector.connect(user='dbid231', password='dbpass231',
                                       host='localhost',

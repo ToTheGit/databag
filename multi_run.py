@@ -10,12 +10,13 @@ import multiprocessing
 # In[ ]:
 
 
-def run_script(place):
+def run_script(place, places):
     import yeouido
-    yeouido.main(place)
+    yeouido.main(place, places)
 
 if __name__ == "__main__":
-    places = ['강남 MICE 관광특구',
+    places = ['여의도',
+ '강남 MICE 관광특구',
  '동대문 관광특구',
  '명동 관광특구',
  '이태원 관광특구',
@@ -50,7 +51,6 @@ if __name__ == "__main__":
  '수유리 먹자골목',
  '쌍문동 맛집거리',
  '압구정로데오거리',
- '여의도',
  '영등포 타임스퀘어',
  '인사동·익선동',
  '국립중앙박물관·용산가족공원',
