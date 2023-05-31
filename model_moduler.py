@@ -228,8 +228,8 @@ class DatabaseUpdater:
             # Create the SQL INSERT command with ON DUPLICATE KEY UPDATE
             insert_query = f"""
             INSERT INTO congestions_tb
-            (id, AREA_NM, AREA_CONGEST_LVL, AREA_PPLTN_MIN, AREA_PPLTN_MAX) 
-            VALUES ({i}, '{place}', '{row['AREA_CONGEST_LVL']}', {row['AREA_PPLTN_MIN']}, {row['AREA_PPLTN_MAX']})
+            (id, HOTSPOT_ID, AREA_CONGEST_LVL, AREA_PPLTN_MIN, AREA_PPLTN_MAX) 
+            VALUES ({i}, {row['AREA_NM']}, '{row['AREA_CONGEST_LVL']}', {row['AREA_PPLTN_MIN']}, {row['AREA_PPLTN_MAX']})
             ON DUPLICATE KEY UPDATE
             AREA_CONGEST_LVL = VALUES(AREA_CONGEST_LVL),
             AREA_PPLTN_MIN = VALUES(AREA_PPLTN_MIN),
