@@ -122,7 +122,7 @@ class Modeling:
         model = keras.Model(inputs, [output1, output2])
         model.compile(optimizer="Adam", loss={"output1": "mse", "output2": "mse"}, 
                       metrics={"output1": ["mae"], "output2": ["mae"]}, )
-        history = model.fit(dataset, epochs=20)
+        history = model.fit(dataset, epochs=20, verbose=2)
         return model
             
     def prediction(self, model, sequence_length):
@@ -166,6 +166,7 @@ class Modeling:
         return df_predictions
     
     def get_ready(self, df_predictions):
+        df_predictions = df_predictions.abs()
         def swap_min_max(row):
             if row['AREA_PPLTN_MIN'] > row['AREA_PPLTN_MAX']:
                 row['AREA_PPLTN_MIN'], row['AREA_PPLTN_MAX'] = row['AREA_PPLTN_MAX'], row['AREA_PPLTN_MIN']
